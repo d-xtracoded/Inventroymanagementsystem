@@ -37,8 +37,8 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(InvalidCredentialExecption.class)
-    public ResponseEntity<Response> handleInvalidCredentialExecption(InvalidCredentialExecption ex){
+    @ExceptionHandler(InvalidCredentialException.class)
+    public ResponseEntity<Response> handleInvalidCredentialException(InvalidCredentialException ex){
         Response response= Response.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())

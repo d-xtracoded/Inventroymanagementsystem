@@ -16,7 +16,7 @@ public class Response {
     //Generic
     private int status;
     private String message;
-    // logi
+    // login
     private String token;
     private UserRole role;
     private String expirationTime;

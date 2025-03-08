@@ -1,8 +1,6 @@
 package com.prime.InventroryMgtSystem.dtos;
 
 
-import com.prime.InventroryMgtSystem.enums.UserRole;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
