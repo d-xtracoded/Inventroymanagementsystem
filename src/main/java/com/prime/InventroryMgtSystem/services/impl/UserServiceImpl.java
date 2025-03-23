@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +63,6 @@ public class UserServiceImpl implements UserService {
         }
         String token = jwtUtils.generatetoken(user.getEmail());
 
-
         return Response.builder()
                 .status(200)
                 .message("User Logged in successfully")
@@ -70,7 +71,6 @@ public class UserServiceImpl implements UserService {
                 .expirationTime("6 months")
                 .build();
     }
-
     @Override
     public Response getAllUsers() {
         List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
@@ -85,29 +85,67 @@ public class UserServiceImpl implements UserService {
                 .users(userDTOS)
                 .build();
     }
-
     @Override
     public Response getUserbyID(Long id) {
-        return null;
-    }
+        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundExecption("User not find"));
+        UserDTO userDTO = modelMapper.map(user,UserDTO.class);
+        userDTO.setTransaction(null);
 
+        return Response.builder()
+                .status(200)
+                .message("success")
+                .user(userDTO)
+                .build();
+    }
     @Override
     public User getCurrentLoggedInUser() {
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email) .orElseThrow(()-> new NotFoundExecption("User Not Found"));
+        user.setTransaction(null);
+        return user;
     }
-
     @Override
     public Response updateUser(Long id, UserDTO userDTO) {
-        return null;
+        User existinguser = userRepository.findById(id).orElseThrow(()-> new NotFoundExecption("User Not Found"));
+        if (userDTO.getEmail() !=null) existinguser.setEmail(userDTO.getEmail());
+        if (userDTO.getPhonenumber() !=null) existinguser.setPhonenumber(userDTO.getPhonenumber());
+        if (userDTO.getPassword() !=null) existinguser.setPassword(userDTO.getPassword());
+        if (userDTO.getName() !=null) existinguser.setName(userDTO.getName());
+        if (userDTO.getRole() !=null) existinguser.setRole(userDTO.getRole());
+        if (userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty()){
+            existinguser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
+
+        return Response.builder()
+                .status(200)
+                .message("User successfully updated.")
+                .build();
     }
 
     @Override
     public Response deleteUser(Long id) {
-        return null;
+        User user = userRepository.findById(id).orElseThrow(()->new NotFoundExecption("User not found"));
+
+        return Response.builder()
+                .status(200)
+                .message("User successfully Deleted")
+                .build();
     }
 
     @Override
     public Response getUserTransaction(Long id) {
-        return null;
+        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundExecption("User not found"));
+        UserDTO userDTO= modelMapper.map(user,UserDTO.class);
+        userDTO.getTransaction().forEach(transactionDTO -> {
+            transactionDTO.setUser(null);
+            transactionDTO.setSupplier(null);
+        });
+
+        return  Response.builder()
+                .status(200)
+                .message("success")
+                .build();
     }
 }
