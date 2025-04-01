@@ -29,8 +29,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    //private final ModelMapper modelMapper;
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+    //private ModelMapper modelMapper;
     private final JwtUtils jwtUtils;
 
     @Override
@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
     User userTosave = User.builder()
             .name(registrationRequest.getName())
             .email(registrationRequest.getEmail())
+            .phonenumber(registrationRequest.getPhonenumber())
             .password(passwordEncoder.encode(registrationRequest.getPassword()))
             .role(role).build();
         userRepository.save(userTosave);
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
             throw new InvalidCredentialException("Password Does Not Match");
         }
-        String token = jwtUtils.generatetoken(user.getEmail());
+        String token = jwtUtils.generateToken(user.getEmail());
 
         return Response.builder()
                 .status(200)
@@ -116,6 +117,7 @@ public class UserServiceImpl implements UserService {
         if (userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty()){
             existinguser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
+        userRepository.save(existinguser);
 
 
         return Response.builder()
@@ -146,6 +148,7 @@ public class UserServiceImpl implements UserService {
         return  Response.builder()
                 .status(200)
                 .message("success")
+                .user(userDTO)
                 .build();
     }
 }

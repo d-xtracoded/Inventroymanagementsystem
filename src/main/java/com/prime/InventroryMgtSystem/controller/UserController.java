@@ -17,14 +17,14 @@ public class UserController {
         private final UserService userService;
 
         @GetMapping("/all")
-        @PreAuthorize("hasAnyAuthority('Admin')")
+        @PreAuthorize("hasAnyAuthority('ADMIN')")
         public ResponseEntity<Response> getallusers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-        @PostMapping("/{id}")
-        public ResponseEntity<Response> getuser(@PathVariable Long Request){
-        return ResponseEntity.ok(userService.getUserbyID(Request));
+        @GetMapping("/{id}")
+        public ResponseEntity<Response> getuser(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getUserbyID(id));
     }
 
     @PutMapping("/update/{id}")
@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Response> deleteuser(@PathVariable Long id){
         return ResponseEntity.ok(userService.deleteUser(id));
     }

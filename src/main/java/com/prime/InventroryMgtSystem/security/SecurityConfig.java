@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDenialHandler)
                         .authenticationEntryPoint(customAuthenticationEntrypoint))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/auth**")
+                        .requestMatchers("/api/auth/**")
                         .permitAll().anyRequest().authenticated())
                 .sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);

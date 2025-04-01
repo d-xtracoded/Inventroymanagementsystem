@@ -1,6 +1,5 @@
 package com.prime.InventroryMgtSystem.reposit;
 
-import com.prime.InventroryMgtSystem.models.Category;
 import com.prime.InventroryMgtSystem.models.Transaction;
 import com.prime.InventroryMgtSystem.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

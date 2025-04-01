@@ -1,18 +1,14 @@
 package com.prime.InventroryMgtSystem.security;
 
-import com.prime.InventroryMgtSystem.models.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -33,10 +29,9 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = getTokenfromRequest(request);
-
-        if (token== null){
-            String email = jwtUtils.getUsernamefromToken(token);
+        String token = getTokenFromRequest(request);
+        if (token!= null){
+            String email = jwtUtils.getUsernameFromToken(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
             if (StringUtils.hasText(email) && jwtUtils.isTokenValid(token, userDetails)){
@@ -56,9 +51,9 @@ public class AuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private String getTokenfromRequest(HttpServletRequest request) {
+    private String getTokenFromRequest(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (token!=null && token.startsWith("Bearer")){
+        if (token!=null && token.startsWith("Bearer ")){
             return token.substring(7);
         }
         return null;
