@@ -24,7 +24,7 @@ public class UserDTO {
 
     private String email;
 
-    @JsonIgnore
+    @JsonIgnore //ignore password feilds during serialization
     private String password;
 
     private String phonenumber;

@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         return Response.builder()
                 .status(200)
-                .message("User was succesfuuly created")
+                .message("User was successfully created")
                 .build();
     }
 

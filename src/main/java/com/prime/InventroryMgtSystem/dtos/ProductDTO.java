@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL) // ignore fields that are not null
+@JsonIgnoreProperties(ignoreUnknown = true)// ignore fields that are not true
 public class ProductDTO {
 
     private Long id;

@@ -52,7 +52,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "ProductDTO{" +
+        return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", sku='" + sku + '\'' +

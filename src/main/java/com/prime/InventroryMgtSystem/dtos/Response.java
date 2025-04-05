@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL) // fields that are not present in the response let not display them
 public class Response {
 
     //Generic

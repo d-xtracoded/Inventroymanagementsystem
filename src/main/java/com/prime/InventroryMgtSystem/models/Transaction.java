@@ -57,7 +57,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "TransactionDTO{" +
+        return "Transaction{" +
                 "id=" + id +
                 ", totalproducts=" + totalproducts +
                 ", totalPrice=" + totalPrice +
