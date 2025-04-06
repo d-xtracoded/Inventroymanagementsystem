@@ -63,6 +63,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Response updateCategory(Long id, CategoryDTO categoryDTO) {
+        Category existingcategory = categoryRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Category not found"));
+
 
         return null;
     }
