@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @PostMapping("/all")
+    @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Response> createCategory(@RequestBody CategoryDTO categoryDTO){
         return ResponseEntity.ok(categoryService.createCategory(categoryDTO));
@@ -26,10 +26,17 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategorybyid(id));
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Response> updatecategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
         return ResponseEntity.ok(categoryService.updateCategory(id,categoryDTO));
     }
+
+    @PutMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<Response> deletecategory(@PathVariable Long id){
+        return ResponseEntity.ok(categoryService.deleteCategory(id));
+    }
+
 
 }
