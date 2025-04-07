@@ -9,5 +9,6 @@ public interface CategoryService {
     Response getAllCategory();
     Response getCategorybyid(Long id);
     Response updateCategory(Long id, CategoryDTO categoryDTO);
+    Response deleteCategory(Long id);
 
 }
