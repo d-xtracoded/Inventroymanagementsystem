@@ -21,7 +21,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private CategoryRepository categoryRepository;
-    private ModelMapper modelMapper; // use to map dto to entities
+    private final ModelMapper modelMapper; // use to map dto to entities
 
     @Override
     public Response createCategory(CategoryDTO categoryDTO) {
