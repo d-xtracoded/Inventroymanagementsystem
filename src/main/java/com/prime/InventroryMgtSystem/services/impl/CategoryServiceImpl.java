@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper; // use to map dto to entities
 
     @Override
