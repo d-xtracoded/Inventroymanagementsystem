@@ -39,7 +39,14 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Response updateSupplier(Long id, SupplierDTO supplierDTO) {
-        return null;
+        Supplier existingsupplier = supplierRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Category not found"));
+        existingsupplier.setName(supplierDTO.getName());
+        supplierRepository.save(existingsupplier);
+
+        return Response.builder()
+                .status(200)
+                .message("Supplier successfully updated")
+                .build();
     }
 
     @Override
