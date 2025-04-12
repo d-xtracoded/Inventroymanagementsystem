@@ -1,7 +1,10 @@
 package com.prime.InventroryMgtSystem.services.impl;
 
+import com.prime.InventroryMgtSystem.dtos.CategoryDTO;
 import com.prime.InventroryMgtSystem.dtos.Response;
 import com.prime.InventroryMgtSystem.dtos.SupplierDTO;
+import com.prime.InventroryMgtSystem.exceptions.NotFoundExecption;
+import com.prime.InventroryMgtSystem.models.Category;
 import com.prime.InventroryMgtSystem.models.Supplier;
 import com.prime.InventroryMgtSystem.reposit.SupplierRepository;
 import com.prime.InventroryMgtSystem.services.SupplierService;
@@ -9,7 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +44,13 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Response getSupplier(Long id) {
-        return null;
+        Supplier supplier = supplierRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Supplier Not found"));
+        SupplierDTO supplierDTO = modelMapper.map(supplier, SupplierDTO.class);
+        return Response.builder()
+                .status(200)
+                .message("success")
+                .supplier(supplierDTO)
+                .build();
     }
 
     @Override
@@ -47,6 +60,16 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Response getallSupplier() {
-        return null;
+        List<Supplier> supplier = supplierRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        // return properties of cat without products
+       // supplier.forEach(category -> supplier.setProducts(null));
+        // we need to map to DTO
+        List<CategoryDTO> categoryDTOSlist = modelMapper.map(supplier, new TypeToken<CategoryDTO>(){}
+                .getType());
+        return Response.builder()
+                .status(200)
+                .categories(categoryDTOSlist)
+                .message("success")
+                .build();
     }
 }
