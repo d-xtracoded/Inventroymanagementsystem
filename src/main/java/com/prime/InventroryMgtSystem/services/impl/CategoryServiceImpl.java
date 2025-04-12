@@ -2,6 +2,7 @@ package com.prime.InventroryMgtSystem.services.impl;
 
 import com.prime.InventroryMgtSystem.dtos.CategoryDTO;
 import com.prime.InventroryMgtSystem.dtos.Response;
+import com.prime.InventroryMgtSystem.dtos.UserDTO;
 import com.prime.InventroryMgtSystem.exceptions.NotFoundExecption;
 import com.prime.InventroryMgtSystem.models.Category;
 import com.prime.InventroryMgtSystem.reposit.CategoryRepository;
@@ -32,12 +33,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .message("category created succesfully")
                 .build();
     }
-
     @Override
     public Response getAllCategory() {
         List<Category> categories = categoryRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-
-
         // return properties of cat without products
      categories.forEach(category -> category.setProducts(null));
         // we need to map to DTO
@@ -49,7 +47,6 @@ public class CategoryServiceImpl implements CategoryService {
              .message("success")
              .build();
     }
-
     @Override
     public Response getCategorybyid(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Category Not found"));
@@ -60,7 +57,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .category(categoryDTO)
                 .build();
     }
-
     @Override
     public Response updateCategory(Long id, CategoryDTO categoryDTO) {
         Category existingcategory = categoryRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Category not found"));

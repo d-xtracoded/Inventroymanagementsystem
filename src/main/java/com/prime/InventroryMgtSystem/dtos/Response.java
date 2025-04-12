@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL) // fields that are not present in the response let not display them
 public class Response {
+    // User to Show out result
 
     //Generic
     private int status;

@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 
 public class SupplierDTO {
 
+    //Data transfer Object
     private Long id;
 
     @NotBlank(message = "Name is required")
