@@ -39,8 +39,10 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Response updateSupplier(Long id, SupplierDTO supplierDTO) {
-        Supplier existingsupplier = supplierRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Category not found"));
-        existingsupplier.setName(supplierDTO.getName());
+        Supplier existingsupplier = supplierRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Supplier not found"));
+        if(supplierDTO.getName() != null) existingsupplier.setName(supplierDTO.getName());
+        if(supplierDTO.getContactInfo() != null) existingsupplier.setContactInfo(supplierDTO.getContactInfo());
+        if(supplierDTO.getAddress() != null) existingsupplier.setAddress(supplierDTO.getAddress());
         supplierRepository.save(existingsupplier);
 
         return Response.builder()
@@ -62,14 +64,18 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Response deleteSupplier(Long id) {
-        return null;
+        Supplier supplier = supplierRepository.findById(id).orElseThrow(()-> new NotFoundExecption("Supplier Not found"));
+        supplierRepository.delete(supplier);
+        return Response.builder()
+                .status(200)
+                .message("successfully deleted")
+                .build();
     }
 
     @Override
     public Response getallSupplier() {
         List<Supplier> supplier = supplierRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        // return properties of cat without products
-       // supplier.forEach(category -> supplier.setProducts(null));
+
         // we need to map to DTO
         List<CategoryDTO> categoryDTOSlist = modelMapper.map(supplier, new TypeToken<CategoryDTO>(){}
                 .getType());
