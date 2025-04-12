@@ -1,7 +1,8 @@
 package com.prime.InventroryMgtSystem.services;
 
+import com.prime.InventroryMgtSystem.dtos.Response;
 import com.prime.InventroryMgtSystem.dtos.SupplierDTO;
-import org.apache.coyote.Response;
+
 
 public interface SupplierService {
     // Serve as a bridge btw DTO and Controller
