@@ -11,10 +11,15 @@ import com.prime.InventroryMgtSystem.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -50,8 +55,8 @@ public class ProductServiceImpl implements ProductService {
 
         if (imageFile != null && !imageFile.isEmpty()) {
             log.info("Image file exist");
-//            String imagePath = saveImage(imageFile); //use this when you haven't setup your frontend
-            String imagePath = saveImage2(imageFile); //use this when you ave set up your frontend locally but haven't deployed to produiction
+  String imagePath = saveImage(imageFile); //use this when you haven't set up your frontend
+          //  String imagePath = saveImage2(imageFile); //use this when you have set up your frontend locally but haven't deployed to production
 
             System.out.println("IMAGE URL IS: " + imagePath);
             productToSave.setImageurl(imagePath);
@@ -68,27 +73,114 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response updateProduct(ProductDTO productDTO,MultipartFile imageFile) {
-        return null;
+
+        //check if product exist
+        Product existingProduct = productRepository.findById(productDTO.getProductid())
+                .orElseThrow(() -> new NotFoundExecption("Product Not Found"));
+
+        //check if image is associated with the product to update and upload
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = saveImage(imageFile); //use this when you haven't setup your frontend
+            //String imagePath = saveImage2(imageFile); //use this when you have set up your frontend locally but haven't deployed to produiction
+
+            System.out.println("IMAGE URL IS: " + imagePath);
+            existingProduct.setImageurl(imagePath);
+        }
+
+        //check if category is to be changed for the products
+        if (productDTO.getCategoryid() != null && productDTO.getCategoryid() > 0) {
+            Category category = categoryRepository.findById(productDTO.getCategoryid())
+                    .orElseThrow(() -> new NotFoundExecption("Category Not Found"));
+            existingProduct.setCategory(category);
+        }
+
+        //check if product fields is to be changed and update
+        if (productDTO.getName() != null && !productDTO.getName().isBlank()) {
+            existingProduct.setName(productDTO.getName());
+        }
+
+        if (productDTO.getSku() != null && !productDTO.getSku().isBlank()) {
+            existingProduct.setSku(productDTO.getSku());
+        }
+
+        if (productDTO.getDescription() != null && !productDTO.getDescription().isBlank()) {
+            existingProduct.setDescription(productDTO.getDescription());
+        }
+
+        if (productDTO.getPrice() != null && productDTO.getPrice().compareTo(BigDecimal.ZERO) >= 0) {
+            existingProduct.setPrice(productDTO.getPrice());
+        }
+
+        if (productDTO.getStockQuantity() != null && productDTO.getStockQuantity() >= 0) {
+            existingProduct.setStockQuantity(productDTO.getStockQuantity());
+        }
+        //update the product
+        productRepository.save(existingProduct);
+
+        //Build our response
+        return Response.builder()
+                .status(200)
+                .message("Product Updated successfully")
+                .build();
+
     }
 
     @Override
     public Response getProduct() {
-        return null;
+
+        List<Product> productList = productRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+
+        List<ProductDTO> productDTOList = modelMapper.map(productList, new TypeToken<List<ProductDTO>>() {
+        }.getType());
+
+        return Response.builder()
+                .status(200)
+                .message("success")
+                .products(productDTOList)
+                .build();
     }
 
     @Override
     public Response getProductbyid(Long id) {
-        return null;
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundExecption("Product Not Found"));
+
+        return Response.builder()
+                .status(200)
+                .message("success")
+                .product(modelMapper.map(product, ProductDTO.class))
+                .build();
     }
 
     @Override
     public Response deleteProduct(Long id) {
-        return null;
+        productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundExecption("Product Not Found"));
+
+        productRepository.deleteById(id);
+
+        return Response.builder()
+                .status(200)
+                .message("Product Deleted successfully")
+                .build();
     }
 
     @Override
-    public Response searchProduct(String Input) {
-        return null;
+    public Response searchProduct(String input) {
+        List<Product> products = productRepository.findByNameContainingOrDescriptionContaining( input, input);
+
+        if (products.isEmpty()) {
+            throw new NotFoundExecption("Product Not Found");
+        }
+
+        List<ProductDTO> productDTOList = modelMapper.map(products, new TypeToken<List<ProductDTO>>() {
+        }.getType());
+
+        return Response.builder()
+                .status(200)
+                .message("success")
+                .products(productDTOList)
+                .build();
     }
 
 

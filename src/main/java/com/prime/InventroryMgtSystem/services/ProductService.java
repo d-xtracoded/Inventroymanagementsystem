@@ -11,5 +11,5 @@ public interface ProductService {
     Response getProductbyid(Long id);
     Response deleteProduct(Long id);
 
-    Response searchProduct(String Input);
+    Response searchProduct(String input);
 }
