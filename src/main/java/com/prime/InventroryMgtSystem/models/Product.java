@@ -52,7 +52,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "ProductService{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", sku='" + sku + '\'' +

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TransactionRequest {
 
-    @Positive(message = "Product is required")
+    @Positive(message = "ProductService is required")
     private Long productid;
 
     @Positive(message = "Quantity is required")
