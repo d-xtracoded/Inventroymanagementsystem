@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,5 +25,21 @@ public class SupplierController {
         return  ResponseEntity.ok(supplierService.getallSupplier());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Response>getsupplier(@PathVariable Long id){
+        return ResponseEntity.ok(supplierService.getSupplier(id));
+    }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<Response> updatesupplier(@RequestBody SupplierDTO supplierDTO, @PathVariable Long id){
+        return ResponseEntity.ok(supplierService.updateSupplier(id,supplierDTO));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<Response> deletecategory(@PathVariable Long id){
+        return ResponseEntity.ok(supplierService.deleteSupplier(id));
+    }
 
 }

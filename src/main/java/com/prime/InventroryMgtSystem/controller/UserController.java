@@ -2,6 +2,7 @@ package com.prime.InventroryMgtSystem.controller;
 
 import com.prime.InventroryMgtSystem.dtos.Response;
 import com.prime.InventroryMgtSystem.dtos.UserDTO;
+import com.prime.InventroryMgtSystem.models.User;
 import com.prime.InventroryMgtSystem.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,11 @@ public class UserController {
     @GetMapping("/gettransactions/{userid}")
     public ResponseEntity<Response> getuserAndTransaction(@PathVariable Long userid){
         return ResponseEntity.ok(userService.getUserTransaction(userid));
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser(){
+            return ResponseEntity.ok(userService.getCurrentLoggedInUser());
     }
 
     }

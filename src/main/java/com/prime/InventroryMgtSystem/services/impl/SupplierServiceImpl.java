@@ -74,15 +74,16 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Response getallSupplier() {
-        List<Supplier> supplier = supplierRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<Supplier> suppliers = supplierRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 
-        // we need to map to DTO
-        List<CategoryDTO> categoryDTOSlist = modelMapper.map(supplier, new TypeToken<CategoryDTO>(){}
-                .getType());
+        List<SupplierDTO> supplierDTOList = modelMapper.map(suppliers, new TypeToken<List<SupplierDTO>>() {
+        }.getType());
+
         return Response.builder()
                 .status(200)
-                .categories(categoryDTOSlist)
                 .message("success")
+                .suppliers(supplierDTOList)
                 .build();
     }
 }
+
