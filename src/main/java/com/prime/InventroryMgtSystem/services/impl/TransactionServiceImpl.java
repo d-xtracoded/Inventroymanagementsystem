@@ -30,6 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -224,6 +225,18 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Response updateTransactionStatus(Long transactionId, TransactionStatus status) {
-        return null;
+
+        Transaction existingTransaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new NotFoundExecption("Transaction Not Found"));
+
+        existingTransaction.setStatus(status);
+        existingTransaction.setUpdatedAt(LocalDateTime.now().now());
+
+        transactionRepository.save(existingTransaction);
+
+        return Response.builder()
+                .status(200)
+                .message("Transaction Status Successfully Updated")
+                .build();
     }
 }
